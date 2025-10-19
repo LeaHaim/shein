@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 const ItemInCartSchema = new Schema<IItemInCart>(
   {
     item_id: {
@@ -13,7 +13,9 @@ const ItemInCartSchema = new Schema<IItemInCart>(
   },
   { _id: false }
 );
-const CartScheme = new Schema<ICart>(
+
+interface ICartSchema extends Document, ICart {}
+const CartScheme = new Schema<ICartSchema>(
   {
     user_id: {
       type: String,

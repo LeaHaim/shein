@@ -1,5 +1,4 @@
-interface IUser{
-    _id?:string,
+export interface IUser{
     name:string,
     email:string,
     password:string,
@@ -8,6 +7,7 @@ interface IUser{
     updatedAt:Date,
 }
 
-enum USER_ROLE {
-    ADMIN,USER
+export enum USER_ROLE {
+    ADMIN = 'ADMIN',
+    USER = 'USER'
 }

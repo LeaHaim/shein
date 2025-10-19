@@ -1,6 +1,8 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
+import { IUser, USER_ROLE } from "../types/user.types";
 
-const UserScheme = new Schema<IUser>(
+export interface IUserScheme extends Document,IUser {}
+const UserScheme = new Schema<IUserScheme>(
   {
     name: {
       type: String,
@@ -11,6 +13,7 @@ const UserScheme = new Schema<IUser>(
       type: String,
       required: true,
       minLength: 2,
+      unique:true,
     },
     password: {
       type: String,
@@ -18,6 +21,7 @@ const UserScheme = new Schema<IUser>(
       minLength: 2,
     },
     role: {
+      type:String,
       enum: USER_ROLE,
       default: USER_ROLE.USER,
       required: true,

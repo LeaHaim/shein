@@ -1,6 +1,8 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-const FavoriteScheme = new Schema<IFavorite>(
+interface IFavoriteSchema extends IFavorite, Document {}
+
+const FavoriteScheme = new Schema<IFavoriteSchema>(
   {
     user_id: {
       type: String,

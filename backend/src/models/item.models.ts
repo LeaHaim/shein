@@ -1,6 +1,7 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const ItemScheme = new Schema<IItem>(
+interface IItemScheme extends Document,IItem {}
+const ItemScheme = new Schema<IItemScheme>(
   {
     name: {
       type: String,
