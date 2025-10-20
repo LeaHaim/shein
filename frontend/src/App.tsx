@@ -8,7 +8,7 @@ import Navbar from "./components/Navbar";
 
 export default function App() {
   return (
-    <div className="max-w-[1450px] mx-auto mt-5">
+    <div className="max-w-[1450px] mx-auto mt-5 px-5">
       <BrowserRouter>
         <Navbar />
         <Routes>

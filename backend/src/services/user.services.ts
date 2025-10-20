@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { AppError } from "../classes/AppError.class";
 import jwt from "jsonwebtoken";
 import { Experation } from "../enums/experation.enum";
+import { STATUS } from "../enums/status.enum";
 
 class UserService {
   async isExist(email: string) {
@@ -11,7 +12,7 @@ class UserService {
   }
   async login(email: string, password: string): Promise<IUserScheme> {
     const user = await this.isExist(email);
-    if (!user) throw new AppError("User was not found");
+    if (!user) throw new AppError("User was not found",STATUS.NOT_FOUND);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new AppError("Invalid Credentials");
     return user;

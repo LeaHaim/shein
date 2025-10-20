@@ -15,8 +15,8 @@ export async function login(req: Request, res: Response) {
   } catch (error: unknown) {
     return AppResponse(
       res,
-      error instanceof AppError ? error.message : error,
-      STATUS.INTERNAL_SERVER_ERROR
+      error,
+      error instanceof AppError ? error.status : STATUS.INTERNAL_SERVER_ERROR
     );
   }
 }
@@ -28,14 +28,14 @@ export async function register(req: Request, res: Response) {
       throw new AppError("All fields must be filled");
     const exist = await UserServiceInstance.isExist(email);
     if (exist) throw new AppError("user already exist");
-    const user = await UserServiceInstance.register(name,email,password);
+    const user = await UserServiceInstance.register(name, email, password);
     const token = UserServiceInstance.generateUserToken(user._id as string);
     return AppResponse(res, { token, user }, STATUS.OK);
   } catch (error: unknown) {
     return AppResponse(
       res,
-      error instanceof AppError ? error.message : error,
-      STATUS.INTERNAL_SERVER_ERROR
+      error,
+      error instanceof AppError ? error.status : STATUS.INTERNAL_SERVER_ERROR
     );
   }
 }
