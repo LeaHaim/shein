@@ -2,14 +2,19 @@ import { Button } from "@/components/ui/button";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/useAuth";
 import type { IRegister } from "@/types/auth.types";
 import { useState } from "react";
 export default function RegisterPage() {
+  const { registerFunction, error } = useAuth();
   const [user, setUser] = useState<IRegister>({
     name: "",
     email: "",
     password: "",
   });
+  function handleClick() {
+    registerFunction(user);
+  }
   return (
     <div className="flex items-center justify-center min-h-[80vh]">
       <div className="w-full max-w-[550px]">
@@ -51,7 +56,10 @@ export default function RegisterPage() {
             value={user.password}
           />
 
-          <Button className="mt-2">Register Now</Button>
+          <Button className="mt-2" onClick={handleClick}>
+            Register Now
+          </Button>
+          {error ? <div className="text-red-500 text-sm font-semibold">{error}</div> : null}
         </CardHeader>
       </div>
     </div>

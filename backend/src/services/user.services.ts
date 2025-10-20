@@ -6,13 +6,18 @@ import { Experation } from "../enums/experation.enum";
 import { STATUS } from "../enums/status.enum";
 
 class UserService {
+  async getUserById(_id: string) {
+    const user = await UserModel.findById(_id);
+    if (!user) throw new AppError("User was not found", STATUS.NOT_FOUND);
+    return user;
+  }
   async isExist(email: string) {
     const user = await UserModel.findOne({ email });
     return user;
   }
   async login(email: string, password: string): Promise<IUserScheme> {
     const user = await this.isExist(email);
-    if (!user) throw new AppError("User was not found",STATUS.NOT_FOUND);
+    if (!user) throw new AppError("User was not found", STATUS.NOT_FOUND);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new AppError("Invalid Credentials");
     return user;

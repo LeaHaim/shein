@@ -1,5 +1,14 @@
+import { AUTH_REVALIDATE_URL } from "@/hooks/setting";
+import { useAuth } from "@/hooks/useAuth";
 import type { IUser } from "@/types/user.types";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import axios from "axios";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 interface IUserAndToken {
   user: IUser | null;
@@ -28,8 +37,31 @@ export function UserContextWrapper({ children }: IChildren) {
     user: null,
     token: null,
   });
+  useEffect(() => {
+    const myToken = localStorage.getItem("token");
+    if (myToken) {
+      setData((prev) => ({ ...prev, token: myToken }));
+    }
+  }, []);
+  useEffect(() => {
+    if (data.token) {
+      axios
+        .get(AUTH_REVALIDATE_URL, {
+          headers: {
+            Authorization: "Bearer " +data.token,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [data.token]);
 
   function login(user: IUser, token: string) {
+    localStorage.setItem("token", token);
     setData({
       token,
       user,
@@ -45,7 +77,7 @@ export function UserContextWrapper({ children }: IChildren) {
     <UserContext.Provider
       value={{ data: { user: data.user, token: data.token }, login, logout }}
     >
-      {JSON.stringify(data)}
+      {data.token}
       {children}
     </UserContext.Provider>
   );
