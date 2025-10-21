@@ -1,5 +1,4 @@
 import { AUTH_REVALIDATE_URL } from "@/hooks/setting";
-import { useAuth } from "@/hooks/useAuth";
 import type { IUser } from "@/types/user.types";
 import axios from "axios";
 import {
@@ -52,7 +51,7 @@ export function UserContextWrapper({ children }: IChildren) {
           },
         })
         .then((res) => {
-          console.log(res.data);
+           setData(prev=>({...prev,user:res.data}))
         })
         .catch((err) => {
           console.log(err);
@@ -78,6 +77,7 @@ export function UserContextWrapper({ children }: IChildren) {
       value={{ data: { user: data.user, token: data.token }, login, logout }}
     >
       {data.token}
+      {JSON.stringify(data.user)}
       {children}
     </UserContext.Provider>
   );

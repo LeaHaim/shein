@@ -11,7 +11,6 @@ export async function login(req: Request, res: Response) {
       throw new AppError("Email and password are required");
     const user = await UserServiceInstance.login(email, password);
     const token = UserServiceInstance.generateUserToken(user._id as string);
-    console.log(token)
     return AppResponse(res, { token, user }, STATUS.OK);
   } catch (error: unknown) {
     return AppResponse(
@@ -43,8 +42,8 @@ export async function register(req: Request, res: Response) {
 export async function reValidateUser(req:Request,res:Response) {
   try {
     console.log("Revalidate function reached")
-    console.log(req.body.USER_ID)
-    return res.status(200).json({message:"All Good"})
+    const user = await UserServiceInstance.getUserById(req.USER_ID!)
+    return AppResponse(res,user,STATUS.OK)
   } catch (error) {
     return AppResponse(
       res,
