@@ -1,5 +1,5 @@
 import type { ILogin, IRegister } from "@/types/auth.types";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import axios from "axios";
 import {
   AUTH_LOGIN_URL,
