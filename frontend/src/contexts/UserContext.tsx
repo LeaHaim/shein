@@ -67,6 +67,7 @@ export function UserContextWrapper({ children }: IChildren) {
     });
   }
   function logout() {
+    localStorage.removeItem("token");
     setData({
       user: null,
       token: null,
