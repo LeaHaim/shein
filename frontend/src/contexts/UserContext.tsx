@@ -77,8 +77,6 @@ export function UserContextWrapper({ children }: IChildren) {
     <UserContext.Provider
       value={{ data: { user: data.user, token: data.token }, login, logout }}
     >
-      {data.token}
-      {JSON.stringify(data.user)}
       {children}
     </UserContext.Provider>
   );

@@ -1,7 +1,8 @@
 import { useUserContext } from "@/contexts/UserContext";
 import { Link } from "react-router-dom";
-import { MdOutlineFavoriteBorder } from "react-icons/md";
+import { MdAdminPanelSettings, MdOutlineFavoriteBorder } from "react-icons/md";
 import { BsCart } from "react-icons/bs";
+import { USER_ROLE } from "@/types/user.types";
 export default function Navbar() {
   const { data, logout } = useUserContext();
   return (
@@ -18,13 +19,23 @@ export default function Navbar() {
             </Link>
           </div>
         ) : (
-          <div className="flex items-center gap-2 font-semibold">
-            <Link to={"/favorite"}>
-              <MdOutlineFavoriteBorder size={25} />
-            </Link>
-            <Link to={"/cart"}>
-              <BsCart size={25} />
-            </Link>
+          <div className="flex items-center gap-6 font-semibold">
+            {data.user.role == USER_ROLE.USER ? (
+              <div className="flex items-center gap-2 font-semibold">
+                <Link to={"/favorite"}>
+                  <MdOutlineFavoriteBorder size={25} />
+                </Link>
+                <Link to={"/cart"}>
+                  <BsCart size={25} />
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 font-semibold">
+                <Link to={"/admin"}>
+                  <MdAdminPanelSettings size={25} />
+                </Link>
+              </div>
+            )}
             <button className=" hover:underline" onClick={logout}>
               logout
             </button>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -6,6 +6,10 @@ import CartPage from "./pages/CartPage";
 import FavoritePage from "./pages/FavoritePage";
 import Navbar from "./components/Navbar";
 import { useUserContext } from "./contexts/UserContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { USER_ROLE } from "./types/user.types";
+import { PageType } from "./types/pages.types";
+import AdminPage from "./pages/AdminPage";
 
 export default function App() {
   const { data } = useUserContext();
@@ -14,27 +18,79 @@ export default function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          {!data.user ? (
-            <Route path="/login" element={<LoginPage />} />
-          ) : (
-            <Route path="/" element={<HomePage />} />
-          )}
-          {!data.user ? (
-            <Route path="/register" element={<RegisterPage />} />
-          ) : (
-            <Route path="/" element={<HomePage />} />
-          )}
-          {data.user ? (
-            <Route path="/cart" element={<CartPage />} />
-          ) : (
-            <Route path="/" element={<HomePage />} />
-          )}
-          {data.user ? (
-            <Route path="/favorite" element={<FavoritePage />} />
-          ) : (
-            <Route path="/" element={<HomePage />} />
-          )}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute
+                allowedRoles={[USER_ROLE.ADMIN, USER_ROLE.USER]}
+                redirectTo="/"
+                pageType={PageType.PUBLIC}
+              >
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <ProtectedRoute
+                allowedRoles={[USER_ROLE.ADMIN, USER_ROLE.USER]}
+                redirectTo="/"
+                pageType={PageType.AUTH}
+              >
+                <LoginPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute
+                allowedRoles={[USER_ROLE.ADMIN, USER_ROLE.USER]}
+                redirectTo="/"
+                pageType={PageType.AUTH}
+              >
+                <RegisterPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute
+                allowedRoles={[USER_ROLE.USER]}
+                pageType={PageType.PROTECTED}
+                redirectTo="/"
+              >
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/favorite"
+            element={
+              <ProtectedRoute
+                allowedRoles={[USER_ROLE.USER]}
+                pageType={PageType.PROTECTED}
+                redirectTo="/"
+              >
+                <FavoritePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute
+                allowedRoles={[USER_ROLE.ADMIN]}
+                pageType={PageType.PROTECTED}
+                redirectTo="/"
+              >
+                <AdminPage></AdminPage>
+              </ProtectedRoute>
+            }
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>
