@@ -10,7 +10,7 @@ export async function login(req: Request, res: Response) {
     if (!email || !password)
       throw new AppError("Email and password are required");
     const user = await UserServiceInstance.login(email, password);
-    const token = UserServiceInstance.generateUserToken(user._id as string);
+    const token = UserServiceInstance.generateUserToken(user._id as string,user.role);
     return AppResponse(res, { token, user }, STATUS.OK);
   } catch (error: unknown) {
     return AppResponse(
@@ -29,7 +29,7 @@ export async function register(req: Request, res: Response) {
     const exist = await UserServiceInstance.isExist(email);
     if (exist) throw new AppError("user already exist");
     const user = await UserServiceInstance.register(name, email, password);
-    const token = UserServiceInstance.generateUserToken(user._id as string);
+    const token = UserServiceInstance.generateUserToken(user._id as string,user.role);
     return AppResponse(res, { token, user }, STATUS.OK);
   } catch (error: unknown) {
     return AppResponse(

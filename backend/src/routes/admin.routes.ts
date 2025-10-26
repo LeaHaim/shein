@@ -6,11 +6,15 @@ import {
   getOneItem,
   updateItem,
 } from "../controllers/item.controller";
+import { protectRoute } from "../middlewares/requireAuth.middleware";
+import { USER_ROLE } from "../types/user.types";
 
 export const adminRouter = Router();
 
-adminRouter.get("/getall", getAll);
+adminRouter.get("/items", getAll);
+adminRouter.get("/:id", getOneItem);
+
+adminRouter.use(protectRoute([USER_ROLE.ADMIN, USER_ROLE.USER]));
 adminRouter.post("/additem", addItem);
 adminRouter.delete("/:id", deleteItem);
-adminRouter.get("/:id", getOneItem);
 adminRouter.patch("/:id", updateItem);

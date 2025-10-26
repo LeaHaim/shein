@@ -4,6 +4,7 @@ import { AppError } from "../classes/AppError.class";
 import jwt from "jsonwebtoken";
 import { Experation } from "../enums/experation.enum";
 import { STATUS } from "../enums/status.enum";
+import { USER_ROLE } from "../types/user.types";
 
 class UserService {
   async getUserById(_id: string) {
@@ -22,11 +23,11 @@ class UserService {
     if (!isMatch) throw new AppError("Invalid Credentials");
     return user;
   }
-  generateUserToken(_id: string) {
+  generateUserToken(_id: string,role:USER_ROLE) {
     if (!process.env.SECRET) {
       throw new AppError("SECRET environment variable is not set");
     }
-    return jwt.sign({ _id }, process.env.SECRET, { expiresIn: Experation.DAY });
+    return jwt.sign({ _id,role }, process.env.SECRET, { expiresIn: Experation.DAY });
   }
   async hashPassword(password: string) {
     return await bcrypt.hash(password, 10);

@@ -32,6 +32,7 @@ interface IChildren {
   children: ReactNode;
 }
 export function UserContextWrapper({ children }: IChildren) {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<IUserAndToken>({
     user: null,
     token: null,
@@ -43,19 +44,25 @@ export function UserContextWrapper({ children }: IChildren) {
     }
   }, []);
   useEffect(() => {
+    setLoading(true);
     if (data.token) {
       axios
         .get(AUTH_REVALIDATE_URL, {
           headers: {
-            Authorization: "Bearer " +data.token,
+            Authorization: "Bearer " + data.token,
           },
         })
         .then((res) => {
-           setData(prev=>({...prev,user:res.data}))
+          setData((prev) => ({ ...prev, user: res.data }));
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, [data.token]);
 
@@ -72,6 +79,10 @@ export function UserContextWrapper({ children }: IChildren) {
       user: null,
       token: null,
     });
+  }
+
+  if (loading) {
+    return <div>Loading Auth...</div>;
   }
   return (
     <UserContext.Provider
