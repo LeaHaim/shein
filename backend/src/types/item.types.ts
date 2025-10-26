@@ -1,7 +1,7 @@
-interface IItem {
-  category:string,
-  name:string,
-  description:string,
-  price:number,
-  image:string,
+export interface IItem {
+  category: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
 }

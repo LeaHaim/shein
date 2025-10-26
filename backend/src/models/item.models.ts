@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { IItem } from "../types/item.types";
 
-interface IItemScheme extends Document,IItem {}
+interface IItemScheme extends Document, IItem {}
 const ItemScheme = new Schema<IItemScheme>(
   {
     name: {
@@ -28,7 +29,6 @@ const ItemScheme = new Schema<IItemScheme>(
       required: true,
       minLength: 2,
     },
-    
   },
   { timestamps: true }
 );

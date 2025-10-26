@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { authRouter } from "./routes/auth.routes";
 import { initilizeDatabase } from "./utils/initilizeDB";
 import cors from "cors";
+import { adminRouter } from "./routes/admin.routes";
 dotenv.config();
 
 const app = express();
@@ -14,7 +15,7 @@ app.use(
 );
 app.use(express.json());
 app.use("/api/v1/auth", authRouter);
-
+app.use("/api/v1/admin", adminRouter);
 try {
   mongoose
     .connect(process.env.MONGO_URI || "")
