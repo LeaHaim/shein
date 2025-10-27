@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ButtonGroup } from "@/components/ui/button-group"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit2Icon } from "lucide-react";
@@ -36,6 +37,7 @@ export default function CreateOrEditItem({
           price: 0,
         }
   );
+  const [preview,setPreview] = useState(false);
   function onSubmit() {
     if (defaultValue) {
       updateItem(item._id!, item);
@@ -57,10 +59,14 @@ export default function CreateOrEditItem({
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
               <DialogTitle>
-                {defaultValue ? "Edit Product" : "Add Product"}
+                <ButtonGroup className="mx-auto">
+                  <Button variant="ghost">{defaultValue ? "Edit Product" : "Add Product"}</Button>
+                  <Button variant="ghost" onClick={()=>setPreview(true)}>Preview</Button>
+                </ButtonGroup>
               </DialogTitle>
+              {!preview? }
+            <DialogHeader>
               <DialogDescription>
                 {defaultValue
                   ? "Make changes to your product here."
