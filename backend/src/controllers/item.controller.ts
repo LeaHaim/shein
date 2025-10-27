@@ -21,7 +21,6 @@ export async function getOneItem(req: Request, res: Response) {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      console.log("error");
       throw new AppError("No such item", STATUS.NOT_FOUND);
     }
     const item = await ItemServiceInstance.findOneItem(id);

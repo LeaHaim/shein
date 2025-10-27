@@ -1,5 +1,9 @@
 import axios from "axios";
-import { ADMIM_DELETE_ONE_ITEM_URL, ADMIN_GET_ALL_ITEM_URL } from "./setting";
+import {
+  ADMIM_DELETE_ONE_ITEM_URL,
+  ADMIN_ADD_ITEM_URL,
+  ADMIN_GET_ALL_ITEM_URL,
+} from "./setting";
 import type { IItem } from "@/types/item.types";
 import { useUserContext } from "@/contexts/UserContext";
 
@@ -29,5 +33,33 @@ export function useItem() {
         console.log(err);
       });
   }
-  return { getAll, deleteOne };
+  async function createOneItem(item: IItem) {
+    return axios
+      .post(ADMIN_ADD_ITEM_URL, item, {
+        headers: {
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  async function updateOneItem(id: string, item: IItem) {
+    return axios
+      .patch(ADMIM_DELETE_ONE_ITEM_URL + id, item, {
+        headers: {
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  return { getAll, deleteOne, createOneItem, updateOneItem };
 }

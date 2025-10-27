@@ -8,17 +8,23 @@ import { useEffect, useState } from "react";
 
 export default function AdminPage() {
   const [items, setItems] = useState<IItem[]>([]);
-  const { getAll, deleteOne } = useItem();
+  const { getAll, deleteOne, createOneItem, updateOneItem } = useItem();
   useEffect(() => {
     getAll().then((i) => {
       setItems(i || []);
     });
-  }, []);
+  }, [createOneItem]);
 
   function deleteItem(id: string) {
     deleteOne(id).then(() => {
       setItems((prev) => [...prev.filter((item) => item._id != id)]);
     });
+  }
+  function updateItem(id: string, item: IItem) {
+    updateOneItem(id, item);
+  }
+  function createItem(item: IItem) {
+    createOneItem(item);
   }
   return (
     <div className="">
@@ -35,7 +41,12 @@ export default function AdminPage() {
           <Folder /> Manage Category
         </Button>
       </div>
-      <ItemsTable items={items} deleteItem={deleteItem} />
+      <ItemsTable
+        items={items}
+        deleteItem={deleteItem}
+        createItem={createItem}
+        updateItem={updateItem}
+      />
     </div>
   );
 }

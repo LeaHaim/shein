@@ -17,6 +17,7 @@ interface ContextData {
   data: IUserAndToken;
   login: (user: IUser, token: string) => void;
   logout: () => void;
+  loading: boolean;
 }
 
 export const UserContext = createContext<ContextData>({
@@ -26,6 +27,7 @@ export const UserContext = createContext<ContextData>({
   },
   login: () => {},
   logout: () => {},
+  loading: true,
 });
 
 interface IChildren {
@@ -40,20 +42,14 @@ export function UserContextWrapper({ children }: IChildren) {
   useEffect(() => {
     const myToken = localStorage.getItem("token");
     if (myToken) {
-      setData((prev) => ({ ...prev, token: myToken }));
-    }
-  }, []);
-  useEffect(() => {
-    setLoading(true);
-    if (data.token) {
       axios
         .get(AUTH_REVALIDATE_URL, {
           headers: {
-            Authorization: "Bearer " + data.token,
+            Authorization: "Bearer " + myToken,
           },
         })
         .then((res) => {
-          setData((prev) => ({ ...prev, user: res.data }));
+          setData({ user: res.data, token: myToken });
         })
         .catch((err) => {
           console.log(err);
@@ -64,7 +60,7 @@ export function UserContextWrapper({ children }: IChildren) {
     } else {
       setLoading(false);
     }
-  }, [data.token]);
+  }, []);
 
   function login(user: IUser, token: string) {
     localStorage.setItem("token", token);
@@ -80,13 +76,9 @@ export function UserContextWrapper({ children }: IChildren) {
       token: null,
     });
   }
-
-  if (loading) {
-    return <div>Loading Auth...</div>;
-  }
   return (
     <UserContext.Provider
-      value={{ data: { user: data.user, token: data.token }, login, logout }}
+      value={{ data: { user: data.user, token: data.token }, login, logout,loading }}
     >
       {children}
     </UserContext.Provider>

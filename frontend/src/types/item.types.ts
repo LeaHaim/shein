@@ -1,10 +1,10 @@
 export interface IItem {
-  _id: string;
+  _id?: string;
   category: string;
   name: string;
   description: string;
   price: number;
   image: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

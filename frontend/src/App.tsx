@@ -1,18 +1,16 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CartPage from "./pages/CartPage";
 import FavoritePage from "./pages/FavoritePage";
 import Navbar from "./components/Navbar";
-import { useUserContext } from "./contexts/UserContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { USER_ROLE } from "./types/user.types";
 import { PageType } from "./types/pages.types";
 import AdminPage from "./pages/AdminPage";
 
 export default function App() {
-  const { data } = useUserContext();
   return (
     <div className="max-w-[1450px] mx-auto mt-5 px-5">
       <BrowserRouter>
@@ -87,7 +85,7 @@ export default function App() {
                 pageType={PageType.PROTECTED}
                 redirectTo="/"
               >
-                <AdminPage></AdminPage>
+                <AdminPage />
               </ProtectedRoute>
             }
           ></Route>

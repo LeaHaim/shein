@@ -17,15 +17,22 @@ export default function ProtectedRoute({
   redirectTo,
   pageType,
 }: Props) {
-  const { data } = useUserContext();
+  const { data, loading } = useUserContext();
+
+  if (loading) {
+    return (
+      <div className="h-[600px] flex justify-center items-center text-xl font-semibold">
+        Loading...
+      </div>
+    );
+  }
   if (pageType == PageType.PUBLIC) return children;
   if (pageType == PageType.AUTH) {
     if (data.user) return <Navigate to={redirectTo} />;
     return children;
   }
   if (pageType == PageType.PROTECTED) {
-    if (!data.user) return <Navigate to={redirectTo} />;
-    if (!allowedRoles.includes(data.user.role))
+    if (!data.user || !allowedRoles.includes(data.user.role))
       return <Navigate to={redirectTo} />;
   }
   return <div>{children}</div>;
