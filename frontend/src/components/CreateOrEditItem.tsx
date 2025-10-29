@@ -75,7 +75,7 @@ export default function CreateOrEditItem({
     <div>
       <Dialog>
         <form>
-          <DialogTrigger asChild>
+          <DialogTrigger asChild onClick={handleCancle}>
             <Button variant={defaultValue ? "link" : "default"}>
               {defaultValue ? <Edit2Icon /> : "Create new product"}
             </Button>
@@ -160,7 +160,7 @@ export default function CreateOrEditItem({
                   </>
                 </TabsContent>
                 <TabsContent value="preview">
-                  <>
+                  {!item.image&&!item.name ?<Label>Add product details to see preview</Label>:<>
                     <div className="grid gap-4">
                       <img
                         src={item.image || undefined}
@@ -174,8 +174,9 @@ export default function CreateOrEditItem({
                         {item.description}
                       </Label>
                       <Label>{item.price}</Label>
+                      <Label>{item.category}</Label>
                     </div>
-                  </>
+                  </>}
                 </TabsContent>
               </Tabs>
             </DialogTitle>

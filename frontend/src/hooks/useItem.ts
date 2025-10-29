@@ -41,10 +41,11 @@ export function useItem() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        return res.data;
       })
       .catch((err) => {
         console.log(err);
+        return null;
       });
   }
   async function updateOneItem(id: string, item: IItem) {
@@ -55,10 +56,11 @@ export function useItem() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        return res.data;
       })
       .catch((err) => {
         console.log(err);
+        return null;
       });
   }
   return { getAll, deleteOne, createOneItem, updateOneItem };

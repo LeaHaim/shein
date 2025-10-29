@@ -14,7 +14,7 @@ export default function AdminPage() {
     getAll().then((i) => {
       setItems(i || []);
     });
-  }, [createOneItem]);
+  }, []);
 
   async function deleteItem(id: string) {
     await deleteOne(id).then(() => {
@@ -23,14 +23,20 @@ export default function AdminPage() {
   }
   async function updateItem(id: string, item: IItem) {
     try {
-      await updateOneItem(id, item);
+    const i = await updateOneItem(id, item);
+    if(i){
+      setItems((prev)=>prev.map((i)=>(i._id ==id ?{...i,...item}:i)))
+    }
     } catch (error) {
       setError(error as string);
     }
   }
   async function createItem(item: IItem) {
     try {
-      await createOneItem(item);
+      const i = await createOneItem(item);
+      if (i) {
+        setItems((prev) => [...prev, item]);
+      }
     } catch (error) {
       setError(error as string);
     }
