@@ -15,6 +15,7 @@ type Props = {
   deleteItem: (id: string) => void;
   updateItem: (id: string, item: IItem) => void;
   createItem: (item: IItem) => void;
+  error: string;
 };
 
 export default function ItemsTable({
@@ -22,15 +23,13 @@ export default function ItemsTable({
   deleteItem,
   createItem,
   updateItem,
+  error,
 }: Props) {
   return (
     <div>
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-3xl font-bold">Products</h2>
-        <CreateOrEditItem
-          createItem={createItem}
-          updateItem={updateItem}
-        />
+        <CreateOrEditItem createItem={createItem} updateItem={updateItem} error={error} />
       </div>
       {/* //product table */}
       <div className="border border-gray-300 rounded-lg ">
@@ -64,6 +63,7 @@ export default function ItemsTable({
                       defaultValue={i}
                       createItem={createItem}
                       updateItem={updateItem}
+                      error={error}
                     />
                   </div>
                 </TableCell>

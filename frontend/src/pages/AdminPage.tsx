@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function AdminPage() {
   const [items, setItems] = useState<IItem[]>([]);
+  const [error, setError] = useState("");
   const { getAll, deleteOne, createOneItem, updateOneItem } = useItem();
   useEffect(() => {
     getAll().then((i) => {
@@ -15,16 +16,24 @@ export default function AdminPage() {
     });
   }, [createOneItem]);
 
-  function deleteItem(id: string) {
-    deleteOne(id).then(() => {
+  async function deleteItem(id: string) {
+    await deleteOne(id).then(() => {
       setItems((prev) => [...prev.filter((item) => item._id != id)]);
     });
   }
-  function updateItem(id: string, item: IItem) {
-    updateOneItem(id, item);
+  async function updateItem(id: string, item: IItem) {
+    try {
+      await updateOneItem(id, item);
+    } catch (error) {
+      setError(error as string);
+    }
   }
-  function createItem(item: IItem) {
-    createOneItem(item);
+  async function createItem(item: IItem) {
+    try {
+      await createOneItem(item);
+    } catch (error) {
+      setError(error as string);
+    }
   }
   return (
     <div className="">
@@ -46,6 +55,7 @@ export default function AdminPage() {
         deleteItem={deleteItem}
         createItem={createItem}
         updateItem={updateItem}
+        error={error}
       />
     </div>
   );
