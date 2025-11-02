@@ -52,6 +52,9 @@ export function UserContextWrapper({ children }: IChildren) {
           setData({ user: res.data, token: myToken });
         })
         .catch((err) => {
+          if (err.response?.data?.name === "TokenExpiredError") {
+            logout();
+          }
           console.log(err);
         })
         .finally(() => {
