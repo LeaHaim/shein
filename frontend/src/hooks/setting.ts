@@ -7,4 +7,4 @@ export const ADMIN_GET_ALL_ITEM_URL = BASE_URL + "/admin/items";
 export const ADMIM_DELETE_ONE_ITEM_URL = BASE_URL + "/admin/";
 export const ADMIN_ADD_ITEM_URL = BASE_URL + "/admin/additem";
 export const USER_GET_ALL_ITEMS_IN_CART = BASE_URL + "/user/cart";
-export const USER_ADD_ITEM_TO_CART = BASE_URL + "/user/additem"
+export const USER_ADD_ITEM_TO_CART = BASE_URL + "/user/addItem"

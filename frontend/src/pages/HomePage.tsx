@@ -9,15 +9,22 @@ import {
   ItemHeader,
   ItemTitle,
 } from "@/components/ui/item";
+import { Toggle } from "@/components/ui/toggle";
+import { useCart } from "@/hooks/useCart";
+import { BsCart } from "react-icons/bs";
+import { HeartIcon } from "lucide-react";
 export default function HomePage() {
   const [items, setItems] = useState<IItem[]>([]);
   const { getAll } = useItem();
+  const { addItemToCart } = useCart();
   useEffect(() => {
     getAll().then((i) => {
       setItems(i || []);
     });
   }, []);
-
+  async function handleClick(item_id: string) {
+    await addItemToCart({ item_id, quantity: 1 });
+  }
   return (
     <div className="flex w-full max-w-10xl flex-col gap-6 mt-15">
       <ItemGroup className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
@@ -34,7 +41,24 @@ export default function HomePage() {
             </ItemHeader>
             <ItemContent>
               <ItemTitle>{item.name}</ItemTitle>
-              <ItemDescription>{item.description}</ItemDescription>
+              <div className="flex mt-2 items-center gap-2">
+                <ItemDescription>{item.description}</ItemDescription>
+                <Toggle
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleClick(item._id!)}
+                >
+                  <BsCart />
+                </Toggle>
+                <Toggle
+                  aria-label="Toggle heart"
+                  size="sm"
+                  variant="outline"
+                  className="data-[state=on]:bg-transparent data-[state=on]:*:[svg]:fill-red-500 data-[state=on]:*:[svg]:stroke-red-500"
+                >
+                  <HeartIcon />
+                </Toggle>
+              </div>
             </ItemContent>
           </Item>
         ))}

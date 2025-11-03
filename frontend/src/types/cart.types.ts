@@ -1,8 +1,8 @@
 import type { IItem } from "./item.types";
 
 export interface ICart {
-  _id?: string;
+  user_id?: string;
   item_id: string;
-  quantity: string;
+  quantity: number;
   item?: IItem;
 }

@@ -25,7 +25,7 @@ export function useCart() {
       });
   }
   async function addItemToCart(item: ICart) {
-    item._id = data.user?._id;
+    item.user_id = data.user?._id;
     return axios
       .post(USER_ADD_ITEM_TO_CART, item, {
         headers: {
@@ -40,9 +40,9 @@ export function useCart() {
         return null;
       });
   }
-  async function getOneItem(id: string): Promise<IItem | null>  {
+  async function getOneItem(id: string): Promise<IItem | null> {
     return axios
-      .get(ADMIM_DELETE_ONE_ITEM_URL+id, {
+      .get(ADMIM_DELETE_ONE_ITEM_URL + id, {
         headers: {
           Authorization: "Bearer " + data.token,
         },

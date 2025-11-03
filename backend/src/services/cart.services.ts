@@ -16,6 +16,9 @@ class CartService {
       const item = cart.items.find((item) => item.item_id === item_id);
       if (item) {
         item.quantity += quantity;
+        if (item.quantity === 0) {
+          this.deleteItem(user_id, item_id);
+        }
       } else {
         cart.items.push({ item_id, quantity });
       }

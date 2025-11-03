@@ -33,12 +33,19 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { MinusIcon, PlusIcon } from "lucide-react";
 export default function CartPage() {
   const [items, setItems] = useState<ICart[]>([]);
+   const { addItemToCart } = useCart();
   const { getAllItems } = useCart();
   useEffect(() => {
     getAllItems().then((i) => {
       setItems(i || []);
     });
   }, []);
+  async function handleAdd(item_id: string,quantity:number) {
+    await addItemToCart({ item_id, quantity });
+  }
+  async function handleReduce(item_id: string,quantity:number) {
+    await addItemToCart({ item_id, quantity});
+  }
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -73,7 +80,7 @@ export default function CartPage() {
             </div>
           ) : (
             <>
-              <div className="flex w-full max-w-md flex-col gap-6 mx-auto mt-10">
+              <div className="flex w-full max-w-md flex-col gap-6 mx-auto mt-10 max-h-[60v] overflow-y-auto">
                 <ItemGroup className="gap-4">
                   {items.map((item) => (
                     <Item
@@ -101,13 +108,13 @@ export default function CartPage() {
                           </ItemTitle>
                           <ItemDescription className="mt-2">
                             <ButtonGroup className="scale-75">
-                              <Button variant="outline" size="sm">
+                              <Button variant="outline" size="sm" onClick={()=>handleReduce(item.item_id,item.quantity)}>
                                 <MinusIcon />
                               </Button>
                               <Button variant="outline" size="sm">
                                 {item.quantity}
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button variant="outline" size="sm" onClick={()=>handleAdd(item.item_id,item.quantity)}>
                                 <PlusIcon />
                               </Button>
                             </ButtonGroup>
