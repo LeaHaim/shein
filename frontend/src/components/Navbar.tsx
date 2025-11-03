@@ -1,8 +1,8 @@
 import { useUserContext } from "@/contexts/UserContext";
 import { Link } from "react-router-dom";
 import { MdAdminPanelSettings, MdOutlineFavoriteBorder } from "react-icons/md";
-import { BsCart } from "react-icons/bs";
 import { USER_ROLE } from "@/types/user.types";
+import CartPage from "@/pages/CartPage";
 export default function Navbar() {
   const { data, logout } = useUserContext();
   return (
@@ -27,9 +27,7 @@ export default function Navbar() {
                 <Link to={"/favorite"}>
                   <MdOutlineFavoriteBorder size={25} />
                 </Link>
-                <Link to={"/cart"}>
-                  <BsCart size={25} />
-                </Link>
+                <CartPage/>
               </div>
             ) : (
               <div className="flex items-center gap-2 font-semibold">

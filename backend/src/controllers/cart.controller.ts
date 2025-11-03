@@ -4,10 +4,24 @@ import { STATUS } from "../enums/status.enum";
 import { CartServiceInstance } from "../services/cart.services";
 import { AppResponse } from "../utils/AppResponse.utils";
 import { Request, Response } from "express";
+import { ItemModel } from "../models/item.models";
+import { IItemInCart } from "../types/cart.types";
+import { IItem } from "../types/item.types";
 
+interface ExtendedCartItem extends IItemInCart {
+  item?: IItem;
+}
 export async function getAll(req: Request, res: Response) {
   try {
-    const cart = await CartServiceInstance.getAll(req.USER_ID!);
+    const cart: ExtendedCartItem[] = await CartServiceInstance.getAll(
+      req.USER_ID!
+    );
+    for (const itemInCart of cart) {
+      const item = await ItemModel.findById(itemInCart.item_id);
+      if (item) {
+        itemInCart.item = item;
+      }
+    }
     return AppResponse(res, cart, STATUS.OK);
   } catch (error) {
     return AppResponse(
