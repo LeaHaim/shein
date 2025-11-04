@@ -91,7 +91,7 @@ export default function CartPage() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() =>
-                                  handleReduce(item.item_id, -item.quantity)
+                                  handleReduce(item.item_id,-1)
                                 }
                               >
                                 <MinusIcon />
@@ -103,7 +103,7 @@ export default function CartPage() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() =>
-                                  handleAdd(item.item_id, item.quantity)
+                                  handleAdd(item.item_id, 1)
                                 }
                               >
                                 <PlusIcon />
