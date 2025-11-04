@@ -13,14 +13,6 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
-import {
   Item,
   ItemContent,
   ItemDescription,
@@ -28,23 +20,27 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { BsBasket, BsCart } from "react-icons/bs";
+import { BsCart } from "react-icons/bs";
 import { ButtonGroup } from "@/components/ui/button-group";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, Trash2 } from "lucide-react";
+import EmptyCart from "@/components/EmptyCart";
 export default function CartPage() {
   const [items, setItems] = useState<ICart[]>([]);
-   const { addItemToCart } = useCart();
+  const { addItemToCart, deleteItemFromCart } = useCart();
   const { getAllItems } = useCart();
   useEffect(() => {
     getAllItems().then((i) => {
       setItems(i || []);
     });
   }, []);
-  async function handleAdd(item_id: string,quantity:number) {
+  async function handleAdd(item_id: string, quantity: number) {
     await addItemToCart({ item_id, quantity });
   }
-  async function handleReduce(item_id: string,quantity:number) {
-    await addItemToCart({ item_id, quantity});
+  async function handleReduce(item_id: string, quantity: number) {
+    await addItemToCart({ item_id, quantity });
+  }
+  async function handleDelete(item_id: string) {
+    deleteItemFromCart(item_id);
   }
   return (
     <Sheet>
@@ -60,24 +56,7 @@ export default function CartPage() {
         </SheetHeader>
         <>
           {items.length === 0 ? (
-            <div>
-              <Empty className="mt-50">
-                <EmptyHeader>
-                  <EmptyMedia variant="icon">
-                    <BsBasket />
-                  </EmptyMedia>
-                  <EmptyTitle>No items in cart yet.</EmptyTitle>
-                  <EmptyDescription>
-                    Add items to cart to see them here
-                  </EmptyDescription>
-                </EmptyHeader>
-                <EmptyContent>
-                  <SheetClose asChild>
-                    <Button variant="outline">Start Shopping</Button>
-                  </SheetClose>
-                </EmptyContent>
-              </Empty>
-            </div>
+            <EmptyCart />
           ) : (
             <>
               <div className="flex w-full max-w-md flex-col gap-6 mx-auto mt-10 max-h-[60v] overflow-y-auto">
@@ -90,7 +69,7 @@ export default function CartPage() {
                       role="listitem"
                     >
                       <a href="#">
-                        <ItemMedia variant="image">
+                        <ItemMedia variant="image" className="h-20 w-20">
                           <img
                             src={item.item?.image}
                             alt={item.item?.name}
@@ -106,18 +85,36 @@ export default function CartPage() {
                               {item.item?.category}
                             </span>
                           </ItemTitle>
-                          <ItemDescription className="mt-2">
+                          <ItemDescription className="mt-2 flex">
                             <ButtonGroup className="scale-75">
-                              <Button variant="outline" size="sm" onClick={()=>handleReduce(item.item_id,item.quantity)}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  handleReduce(item.item_id, -item.quantity)
+                                }
+                              >
                                 <MinusIcon />
                               </Button>
                               <Button variant="outline" size="sm">
                                 {item.quantity}
                               </Button>
-                              <Button variant="outline" size="sm" onClick={()=>handleAdd(item.item_id,item.quantity)}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  handleAdd(item.item_id, item.quantity)
+                                }
+                              >
                                 <PlusIcon />
                               </Button>
                             </ButtonGroup>
+                            <Button
+                              onClick={() => handleDelete(item.item_id)}
+                              className="bg-white hover:bg-gray-300 rounded-md"
+                            >
+                              <Trash2 className="text-red-600" size={18} />
+                            </Button>
                           </ItemDescription>
                         </ItemContent>
                         <ItemContent className="flex-none">

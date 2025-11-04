@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   ADMIM_DELETE_ONE_ITEM_URL,
   USER_ADD_ITEM_TO_CART,
+  USER_DELETE_ITEM_FROM_CART,
   USER_GET_ALL_ITEMS_IN_CART,
 } from "./setting";
 import type { ICart } from "@/types/cart.types";
@@ -40,6 +41,21 @@ export function useCart() {
         return null;
       });
   }
+  async function deleteItemFromCart(item_id: string){
+    return axios
+      .delete(USER_DELETE_ITEM_FROM_CART+item_id, {
+        headers: {
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
+  }
   async function getOneItem(id: string): Promise<IItem | null> {
     return axios
       .get(ADMIM_DELETE_ONE_ITEM_URL + id, {
@@ -55,5 +71,5 @@ export function useCart() {
         return null;
       });
   }
-  return { getAllItems, addItemToCart, getOneItem };
+  return { getAllItems, addItemToCart, getOneItem,deleteItemFromCart };
 }
