@@ -1,6 +1,4 @@
 import { useCart } from "@/hooks/useCart";
-import type { ICart } from "@/types/cart.types";
-import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetClose,
@@ -24,23 +22,21 @@ import { BsCart } from "react-icons/bs";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { MinusIcon, PlusIcon, Trash2 } from "lucide-react";
 import EmptyCart from "@/components/EmptyCart";
+import { useCartContext } from "@/contexts/CartContext";
 export default function CartPage() {
-  const [items, setItems] = useState<ICart[]>([]);
   const { addItemToCart, deleteItemFromCart } = useCart();
-  const { getAllItems } = useCart();
-  useEffect(() => {
-    getAllItems().then((i) => {
-      setItems(i || []);
-    });
-  }, []);
+  const { cartData, add, reduce, deleteItem } = useCartContext();
   async function handleAdd(item_id: string, quantity: number) {
     await addItemToCart({ item_id, quantity });
+    add(item_id, quantity);
   }
   async function handleReduce(item_id: string, quantity: number) {
     await addItemToCart({ item_id, quantity });
+    reduce(item_id, -1);
   }
   async function handleDelete(item_id: string) {
     deleteItemFromCart(item_id);
+    deleteItem(item_id);
   }
   return (
     <Sheet>
@@ -55,13 +51,13 @@ export default function CartPage() {
           </SheetDescription>
         </SheetHeader>
         <>
-          {items.length === 0 ? (
+          {cartData.length === 0 ? (
             <EmptyCart />
           ) : (
             <>
-              <div className="flex w-full max-w-md flex-col gap-6 mx-auto mt-10 max-h-[60v] overflow-y-auto">
+              <div className="flex w-full max-w-md flex-col gap-6 mx-auto max-h-[60v] overflow-y-auto">
                 <ItemGroup className="gap-4">
-                  {items.map((item) => (
+                  {cartData.map((item) => (
                     <Item
                       key={item.item?.name}
                       variant="outline"
@@ -90,9 +86,7 @@ export default function CartPage() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() =>
-                                  handleReduce(item.item_id,-1)
-                                }
+                                onClick={() => handleReduce(item.item_id, -1)}
                               >
                                 <MinusIcon />
                               </Button>
@@ -102,9 +96,7 @@ export default function CartPage() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() =>
-                                  handleAdd(item.item_id, 1)
-                                }
+                                onClick={() => handleAdd(item.item_id, 1)}
                               >
                                 <PlusIcon />
                               </Button>
@@ -119,7 +111,7 @@ export default function CartPage() {
                         </ItemContent>
                         <ItemContent className="flex-none">
                           <ItemDescription className="text-black font-semibold">
-                            {item.item?.price}
+                            {item.item?.price! * item.quantity}
                           </ItemDescription>
                         </ItemContent>
                       </a>
