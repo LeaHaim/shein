@@ -13,10 +13,12 @@ import { Toggle } from "@/components/ui/toggle";
 import { useCart } from "@/hooks/useCart";
 import { BsCart } from "react-icons/bs";
 import { HeartIcon } from "lucide-react";
+import { useCartContext } from "@/contexts/CartContext";
 export default function HomePage() {
   const [items, setItems] = useState<IItem[]>([]);
   const { getAll } = useItem();
-  const { addItemToCart } = useCart();
+  const { addItemToCart,getOneItem } = useCart();
+  const {set_Open,add} = useCartContext();
   useEffect(() => {
     getAll().then((i) => {
       setItems(i || []);
@@ -24,6 +26,9 @@ export default function HomePage() {
   }, []);
   async function handleClick(item_id: string) {
     await addItemToCart({ item_id, quantity: 1 });
+    const item =await getOneItem(item_id);
+  add(item_id, 1, item!);
+    set_Open(true);
   }
   return (
     <div className="flex w-full max-w-10xl flex-col gap-6 mt-15">

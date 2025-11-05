@@ -27,8 +27,8 @@ export default function CartPage() {
   const { addItemToCart, deleteItemFromCart } = useCart();
   const { cartData, add, reduce, deleteItem } = useCartContext();
   async function handleAdd(item_id: string, quantity: number) {
-    await addItemToCart({ item_id, quantity });
-    add(item_id, quantity);
+    const item = await addItemToCart({ item_id, quantity });
+    add(item_id, quantity,item);
   }
   async function handleReduce(item_id: string, quantity: number) {
     await addItemToCart({ item_id, quantity });
@@ -111,7 +111,7 @@ export default function CartPage() {
                         </ItemContent>
                         <ItemContent className="flex-none">
                           <ItemDescription className="text-black font-semibold">
-                            {item.item?.price! * item.quantity}
+                            {(item.item?.price! * item.quantity).toFixed(2)}
                           </ItemDescription>
                         </ItemContent>
                       </a>
