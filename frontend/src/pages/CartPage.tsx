@@ -1,4 +1,3 @@
-import { useCart } from "@/hooks/useCart";
 import {
   Sheet,
   SheetClose,
@@ -10,36 +9,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
 import { BsCart } from "react-icons/bs";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { MinusIcon, PlusIcon, Trash2 } from "lucide-react";
 import EmptyCart from "@/components/EmptyCart";
 import { useCartContext } from "@/contexts/CartContext";
+import CartTable from "@/components/ui/CartTable";
 export default function CartPage() {
-  const { addItemToCart, deleteItemFromCart } = useCart();
-  const { cartData, add, reduce, deleteItem } = useCartContext();
-  async function handleAdd(item_id: string, quantity: number) {
-    const item = await addItemToCart({ item_id, quantity });
-    add(item_id, quantity,item);
-  }
-  async function handleReduce(item_id: string, quantity: number) {
-    await addItemToCart({ item_id, quantity });
-    reduce(item_id, -1);
-  }
-  async function handleDelete(item_id: string) {
-    deleteItemFromCart(item_id);
-    deleteItem(item_id);
-  }
+  const { cartData, open, set_Open } = useCartContext();
+
+  const totalPrice = Number(
+    cartData
+      .reduce((sum, i) => sum + (i.item?.price! * i.quantity || 0), 0)
+      .toFixed(2)
+  );
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={set_Open}>
       <SheetTrigger asChild>
         <BsCart size={25} />
       </SheetTrigger>
@@ -50,80 +33,11 @@ export default function CartPage() {
             Make changes to your shopping cart here.
           </SheetDescription>
         </SheetHeader>
-        <>
-          {cartData.length === 0 ? (
-            <EmptyCart />
-          ) : (
-            <>
-              <div className="flex w-full max-w-md flex-col gap-6 mx-auto max-h-[60v] overflow-y-auto">
-                <ItemGroup className="gap-4">
-                  {cartData.map((item) => (
-                    <Item
-                      key={item.item?.name}
-                      variant="outline"
-                      asChild
-                      role="listitem"
-                    >
-                      <a href="#">
-                        <ItemMedia variant="image" className="h-20 w-20">
-                          <img
-                            src={item.item?.image}
-                            alt={item.item?.name}
-                            width={100}
-                            height={100}
-                            className="object-cover grayscale"
-                          />
-                        </ItemMedia>
-                        <ItemContent>
-                          <ItemTitle className="line-clamp-1">
-                            {item.item?.name} -{" "}
-                            <span className="text-muted-foreground">
-                              {item.item?.category}
-                            </span>
-                          </ItemTitle>
-                          <ItemDescription className="mt-2 flex">
-                            <ButtonGroup className="scale-75">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleReduce(item.item_id, -1)}
-                              >
-                                <MinusIcon />
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                {item.quantity}
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleAdd(item.item_id, 1)}
-                              >
-                                <PlusIcon />
-                              </Button>
-                            </ButtonGroup>
-                            <Button
-                              onClick={() => handleDelete(item.item_id)}
-                              className="bg-white hover:bg-gray-300 rounded-md"
-                            >
-                              <Trash2 className="text-red-600" size={18} />
-                            </Button>
-                          </ItemDescription>
-                        </ItemContent>
-                        <ItemContent className="flex-none">
-                          <ItemDescription className="text-black font-semibold">
-                            {(item.item?.price! * item.quantity).toFixed(2)}
-                          </ItemDescription>
-                        </ItemContent>
-                      </a>
-                    </Item>
-                  ))}
-                </ItemGroup>
-              </div>
-            </>
-          )}
-        </>
+        <>{cartData.length === 0 ? <EmptyCart /> : <CartTable cartData={cartData}/>}</>
         <SheetFooter>
-          <Button type="submit">Beyond payment</Button>
+          <Button type="submit">
+            Beyond payment {totalPrice > 0 ? totalPrice : ""}
+          </Button>
           <SheetClose asChild>
             <Button variant="outline">Close</Button>
           </SheetClose>
