@@ -6,7 +6,7 @@ import { IItemInFavorite } from "../types/favorite.types";
 class FavoriteService {
   async getAll(id: string): Promise<IItemInFavorite[]> {
     const favorite = await FavoriteModel.findOne({ user_id: id })
-      .select("items -_id")
+      .select("items")
       .lean();
     return favorite?.items || [];
   }

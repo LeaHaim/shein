@@ -16,7 +16,7 @@ export async function getAll(req: Request, res: Response) {
     const favorite: ExtendedFavoriteItem[] =
       await FavoriteServiceInstance.getAll(req.USER_ID!);
     for (const itemInFavorite of favorite) {
-      const item = await ItemModel.findById(itemInFavorite);
+      const item = await ItemModel.findById(itemInFavorite.item_id);
       if (item) {
         itemInFavorite.item = item;
       }
@@ -33,7 +33,7 @@ export async function getAll(req: Request, res: Response) {
 
 export async function addItemToFavorite(req: Request, res: Response) {
   try {
-    const { user_id, item_id, quantity } = req.body;
+    const { user_id, item_id } = req.body;
     const cart = await FavoriteServiceInstance.addItemToFavorite(
       user_id,
       item_id

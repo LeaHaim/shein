@@ -6,6 +6,7 @@ import { initilizeDatabase } from "./utils/initilizeDB";
 import cors from "cors";
 import { adminRouter } from "./routes/admin.routes";
 import { cartRouter } from "./routes/cart.routes";
+import { favoriteRouter } from "./routes/favorite.routes";
 dotenv.config();
 
 const app = express();
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/user", cartRouter);
-app.use("/api/v1/userFavorite", cartRouter);
+app.use("/api/v1/userFavorite", favoriteRouter);
 try {
   mongoose
     .connect(process.env.MONGO_URI || "")

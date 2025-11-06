@@ -14,11 +14,15 @@ import { useCart } from "@/hooks/useCart";
 import { BsCart } from "react-icons/bs";
 import { HeartIcon } from "lucide-react";
 import { useCartContext } from "@/contexts/CartContext";
+import { useFavorite } from "@/hooks/useFavorite";
+import { useFavoriteContext } from "@/contexts/FavoriteContext";
 export default function HomePage() {
   const [items, setItems] = useState<IItem[]>([]);
   const { getAll } = useItem();
   const { addItemToCart,getOneItem } = useCart();
+  const {addItemToFavorite} =useFavorite();
   const {set_Open,add} = useCartContext();
+  const {addFavorite} =useFavoriteContext();
   useEffect(() => {
     getAll().then((i) => {
       setItems(i || []);
@@ -29,6 +33,11 @@ export default function HomePage() {
     const item =await getOneItem(item_id);
   add(item_id, 1, item!);
     set_Open(true);
+  }
+    async function handleFavorite(item_id: string) {
+    await addItemToFavorite({ item_id });
+    const item =await getOneItem(item_id);
+    addFavorite(item_id, item!);
   }
   return (
     <div className="flex w-full max-w-10xl flex-col gap-6 mt-15">
@@ -60,6 +69,7 @@ export default function HomePage() {
                   size="sm"
                   variant="outline"
                   className="data-[state=on]:bg-transparent data-[state=on]:*:[svg]:fill-red-500 data-[state=on]:*:[svg]:stroke-red-500"
+                  onClick={()=>handleFavorite(item._id!)}
                 >
                   <HeartIcon />
                 </Toggle>
