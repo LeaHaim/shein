@@ -1,39 +1,40 @@
-import { CartModel } from "../models/cart.models";
+import { AppError } from "../classes/AppError.class";
+import { STATUS } from "../enums/status.enum";
 import { FavoriteModel } from "../models/favorite.models";
-import { IItemInCart } from "../types/cart.types";
+import { IItemInFavorite } from "../types/favorite.types";
 
 class FavoriteService {
-  async getAll(id: string): Promise<IFavorite[]> {
+  async getAll(id: string): Promise<IItemInFavorite[]> {
     const favorite = await FavoriteModel.findOne({ user_id: id })
-
-    return favorite || [];
+      .select("items -_id")
+      .lean();
+    return favorite?.items || [];
   }
-  async addItemToCart(user_id: string, item_id: string, quantity: number) {
-    let cart = await CartModel.findOne({ user_id });
-    if (!cart) {
-      cart = new CartModel({ user_id, items: [{ item_id, quantity }] });
+  async addItemToFavorite(user_id: string, item_id: string) {
+    let favorite = await FavoriteModel.findOne({ user_id });
+    if (!favorite) {
+      favorite = new FavoriteModel({ user_id, items: [{ item_id }] });
     } else {
-      const item = cart.items.find((item) => item.item_id === item_id);
+      const item = favorite.items.find((item) => item.item_id === item_id);
       if (item) {
-        item.quantity += quantity;
-
-        if (item.quantity <= 0) {
-          this.deleteItem(user_id, item_id);
-        }
+        throw new AppError(
+          "item already in favorite",
+          STATUS.INTERNAL_SERVER_ERROR
+        );
       } else {
-        cart.items.push({ item_id, quantity });
+        favorite.items.push({ item_id });
       }
     }
-    await cart.save();
-    return await CartModel.findOne({ user_id });
+    await favorite.save();
+    return await FavoriteModel.findOne({ user_id });
   }
-  async deleteItem(user_id: string, item_id: string) {
-    let cart = await CartModel.findOne({ user_id });
-    if (cart) {
-      cart.items = cart.items.filter((i) => i.item_id != item_id);
+  async deleteItemFromFavorite(user_id: string, item_id: string) {
+    let favorite = await FavoriteModel.findOne({ user_id });
+    if (favorite) {
+      favorite.items = favorite.items.filter((i) => i.item_id != item_id);
     }
-    await cart?.save();
-    return await CartModel.findOne({ user_id });
+    await favorite?.save();
+    return await FavoriteModel.findOne({ user_id });
   }
 }
 export const FavoriteServiceInstance = new FavoriteService();

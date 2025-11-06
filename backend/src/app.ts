@@ -12,13 +12,14 @@ const app = express();
 app.use(
   cors({
     origin: "*",
-     credentials: true,
+    credentials: true,
   })
 );
 app.use(express.json());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/user", cartRouter);
+app.use("/api/v1/userFavorite", cartRouter);
 try {
   mongoose
     .connect(process.env.MONGO_URI || "")
