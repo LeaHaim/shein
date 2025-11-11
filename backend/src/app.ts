@@ -23,7 +23,10 @@ app.use("/api/v1/user", cartRouter);
 app.use("/api/v1/userFavorite", favoriteRouter);
 try {
   mongoose
-    .connect(process.env.MONGO_URI || "")
+    .connect(process.env.MONGO_URI || "", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
     .then(() => {
       initilizeDatabase();
       app.listen(process.env.PORT, () => {

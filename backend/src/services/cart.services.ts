@@ -13,7 +13,7 @@ class CartService {
     if (!cart) {
       cart = new CartModel({ user_id, items: [{ item_id, quantity }] });
     } else {
-      const item = cart.items.find((item) => item.item_id === item_id);
+      const item = cart.items.find((item :IItemInCart) => item.item_id === item_id);
       if (item) {
         item.quantity += quantity;
 
@@ -30,7 +30,7 @@ class CartService {
   async deleteItem(user_id: string, item_id: string) {
     let cart = await CartModel.findOne({ user_id });
     if (cart) {
-      cart.items = cart.items.filter((i) => i.item_id != item_id);
+      cart.items = cart.items.filter((i :IItemInCart) => i.item_id != item_id);
     }
     await cart?.save();
     return await CartModel.findOne({ user_id });

@@ -15,7 +15,7 @@ class FavoriteService {
     if (!favorite) {
       favorite = new FavoriteModel({ user_id, items: [{ item_id }] });
     } else {
-      const item = favorite.items.find((item) => item.item_id === item_id);
+      const item = favorite.items.find((item:IItemInFavorite) => item.item_id === item_id);
       if (item) {
         throw new AppError(
           "item already in favorite",
@@ -31,7 +31,7 @@ class FavoriteService {
   async deleteItemFromFavorite(user_id: string, item_id: string) {
     let favorite = await FavoriteModel.findOne({ user_id });
     if (favorite) {
-      favorite.items = favorite.items.filter((i) => i.item_id != item_id);
+      favorite.items = favorite.items.filter((i:IItemInFavorite) => i.item_id != item_id);
     }
     await favorite?.save();
     return await FavoriteModel.findOne({ user_id });
